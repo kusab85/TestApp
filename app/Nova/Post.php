@@ -15,14 +15,14 @@ class Post extends Resource
 
     public static function redirectAfterCreate(NovaRequest $request, $resource)
     {
-        logger(__METHOD__.': '. var_export($request->query(), true));
+        logger(__METHOD__.': '.var_export(['query' => $request->query(), 'input' => $request->input()], true));
         return parent::redirectAfterCreate($request, $resource);
     }
 
 
     public static function redirectAfterUpdate(NovaRequest $request, $resource)
     {
-        logger(__METHOD__.': '. var_export($request->query(), true));
+        logger(__METHOD__.': '.var_export(['query' => $request->query(), 'input' => $request->input()], true));
         return parent::redirectAfterUpdate($request, $resource);
     }
 
