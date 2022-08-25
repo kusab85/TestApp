@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Nova;
+
+use App\Models\Post as PostModel;
+use App\Nova\Metrics\PostsPerStatus;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Http\Requests\NovaRequest;
+
+class Post extends Resource
+{
+    public static $model = PostModel::class;
+
+    public static $title = 'title';
+
+    public function fields(NovaRequest $request)
+    {
+        return [
+            ID::make()->sortable(),
+            Text::make('Title')->rules('required'),
+            Trix::make('Body')->rules('required'),
+            BelongsTo::make('User'),
+            Date::make('Created At')->filterable(),
+            Select::make('Status')->options([
+                PostModel::STATUS_DRAFT => PostModel::STATUS_DRAFT,
+                PostModel::STATUS_WAITING_FOR_APPROVAL => PostModel::STATUS_WAITING_FOR_APPROVAL,
+                PostModel::STATUS_REJECTED => PostModel::STATUS_REJECTED,
+                PostModel::STATUS_PUBLISHED => PostModel::STATUS_PUBLISHED,
+                PostModel::STATUS_ARCHIVED => PostModel::STATUS_ARCHIVED,
+            ])
+        ];
+    }
+
+    public function cards(NovaRequest $request)
+    {
+        return [
+            PostsPerStatus::make()->refreshWhenFiltersChange()
+        ];
+    }
+}
