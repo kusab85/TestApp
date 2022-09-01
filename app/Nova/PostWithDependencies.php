@@ -15,27 +15,37 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Post extends Resource
+class PostWithDependencies extends Resource
 {
     public static $model = PostModel::class;
 
     public static $title = 'title';
 
+    public static $clickAction = 'edit';
+
     public function fields(NovaRequest $request)
     {
+
         return [
             ID::make()->sortable(),
 
             Text::make('Title')
                 ->rules('required')
-                ->dependsOn(['user'],
+                ->dependsOn(['user','status','created_at'],
                     function (Text $field, NovaRequest $request, FormData $formData) {
                         logger(get_class($this).": User changed to ".var_export($formData->user, true));
+                        logger(get_class($this).": Status changed to ".var_export($formData->status, true));
+                        logger(get_class($this).": Created at changed to ".var_export($formData->created_at, true));
                     }
                 ),
 
             Textarea::make('Body')
-                ->rules('required'),
+                ->rules('required')
+                ->dependsOn(['title'],
+                    function (Textarea $field, NovaRequest $request, FormData $formData) {
+                        logger(get_class($this).": Title changed to ".var_export($formData->title, true));
+                    }
+                ),
 
             BelongsTo::make('User'),
 
@@ -47,10 +57,4 @@ class Post extends Resource
         ];
     }
 
-    public function cards(NovaRequest $request)
-    {
-        return [
-            PostsPerStatus::make()->refreshWhenFiltersChange(),
-        ];
-    }
 }
