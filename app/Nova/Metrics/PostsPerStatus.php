@@ -8,10 +8,11 @@ use Laravel\Nova\Metrics\Partition;
 
 class PostsPerStatus extends Partition
 {
-
     public function calculate(NovaRequest $request)
     {
         $statuses = Post::availableStatuses(true);
+
+        logger(print_r([get_class($request), $this->filters], true));
 
         return $this
             ->count($request, Post::class, 'status')
@@ -19,7 +20,6 @@ class PostsPerStatus extends Partition
                 return $statuses[$v] ?? 'UNKNOWN';
             });
     }
-
 
     public function uriKey()
     {

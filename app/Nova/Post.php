@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Models\Post as PostModel;
+use App\Nova\Lenses\PostsViaLens;
 use App\Nova\Metrics\PostsPerStatus;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
@@ -38,4 +39,13 @@ class Post extends Resource
             PostsPerStatus::make()->refreshWhenFiltersChange(),
         ];
     }
+
+    public function lenses(NovaRequest $request):array
+    {
+        return [
+            PostsViaLens::make()
+        ];
+    }
+
+
 }
