@@ -17,12 +17,15 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $create_date = $this->faker->dateTimeBetween('-4 years');
+
         return [
-            'name' => fake()->name(),
-            'email' => fake()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'name'              => fake()->name(),
+            'email'             => fake()->safeEmail(),
+            'email_verified_at' => $this->faker->dateTimeBetween($create_date),
+            'password'          => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token'    => Str::random(10),
+            'created_at'        => $create_date,
         ];
     }
 
