@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use App\Models\User as UserModel;
+use App\Nova\Actions\ExportToCsv;
 use App\Nova\Filters\TimeFrame;
 use App\Nova\Lenses\MostActiveCommentators;
 use App\Nova\Lenses\MostActivePublishers;
@@ -85,6 +86,11 @@ class User extends Resource
 
     public function actions(NovaRequest $request): array
     {
-        return [];
+        return [
+            ExportToCsv::make()
+                //->standalone()
+                ->withoutConfirmation()
+                ->withFileBasename('Users'),
+        ];
     }
 }

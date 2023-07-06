@@ -2,6 +2,7 @@
 
 namespace App\Nova\Lenses;
 
+use App\Nova\Actions\ExportToCsv;
 use App\Nova\Filters\TimeFrame;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -88,7 +89,12 @@ class MostActiveCommentators extends Lens
      */
     public function actions(NovaRequest $request): array
     {
-        return parent::actions($request);
+        return [
+            ExportToCsv::make()
+                //->standalone()
+                ->withoutConfirmation()
+                ->withFileBasename('Most Active Commentators'),
+        ];
     }
 
     /**
