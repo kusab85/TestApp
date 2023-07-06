@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Models\Comment as CommentModel;
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
@@ -12,37 +13,15 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Comment extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var class-string<\App\Models\Comment>
-     */
-    public static $model = \App\Models\Comment::class;
+    public static string $model = CommentModel::class;
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'id';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id', 'comment',
     ];
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-     *
-     * @return array
-     */
-    public function fields(NovaRequest $request)
+    public function fields(NovaRequest $request): array
     {
         return [
             ID::make()->sortable(),
@@ -69,50 +48,22 @@ class Comment extends Resource
         ];
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-     *
-     * @return array
-     */
-    public function cards(NovaRequest $request)
+    public function cards(NovaRequest $request): array
     {
         return [];
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-     *
-     * @return array
-     */
-    public function filters(NovaRequest $request)
+    public function filters(NovaRequest $request): array
     {
         return [];
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-     *
-     * @return array
-     */
-    public function lenses(NovaRequest $request)
+    public function lenses(NovaRequest $request): array
     {
         return [];
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param \Laravel\Nova\Http\Requests\NovaRequest $request
-     *
-     * @return array
-     */
-    public function actions(NovaRequest $request)
+    public function actions(NovaRequest $request): array
     {
         return [];
     }

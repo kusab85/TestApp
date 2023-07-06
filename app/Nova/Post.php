@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use App\Models\Post as PostModel;
 use App\Nova\Metrics\PostsPerStatus;
+use Laravel\Nova\Exceptions\HelperNotSupported;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\HasMany;
@@ -15,11 +16,11 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Post extends Resource
 {
-    public static $model = PostModel::class;
+    public static string $model = PostModel::class;
 
     public static $title = 'title';
 
-    public function fields(NovaRequest $request)
+    public function fields(NovaRequest $request): array
     {
         return [
             ID::make()->sortable(),
@@ -34,7 +35,10 @@ class Post extends Resource
         ];
     }
 
-    public function cards(NovaRequest $request)
+    /**
+     * @throws HelperNotSupported
+     */
+    public function cards(NovaRequest $request): array
     {
         return [
             PostsPerStatus::make()->refreshWhenFiltersChange(),
