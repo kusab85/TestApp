@@ -2,6 +2,7 @@
 
 namespace App\Nova\Lenses;
 
+use App\Nova\Filters\TimeFrame;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Fields\Gravatar;
@@ -77,7 +78,9 @@ class MostActiveCommentators extends Lens
      */
     public function filters(NovaRequest $request): array
     {
-        return [];
+        return [
+            TimeFrame::make('comments.created_at'),
+        ];
     }
 
     /**

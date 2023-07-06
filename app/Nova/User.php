@@ -3,12 +3,16 @@
 namespace App\Nova;
 
 use App\Models\User as UserModel;
+use App\Nova\Filters\TimeFrame;
 use App\Nova\Lenses\MostActiveCommentators;
 use App\Nova\Lenses\MostActivePublishers;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rules;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Line;
 use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\Stack;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -39,6 +43,15 @@ class User extends Resource
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
+            Stack::make('Created And Verified', [
+                Line::make('Created at')->asSmall()->displayUsing(fn (
+                    $value
+                ) => Carbon::parse($value)->format('Y-m-d H:i:s')),
+                Line::make('Email verified at')->asSmall()->displayUsing(fn (
+                    $value
+                ) => Carbon::parse($value)->format('Y-m-d H:i:s')),
+            ]),
+
             Password::make('Password')
                 ->onlyOnForms()
                 ->creationRules('required', Rules\Password::defaults())
@@ -53,7 +66,13 @@ class User extends Resource
 
     public function filters(NovaRequest $request): array
     {
-        return [];
+        return [
+            TimeFrame::make('users.created_at')
+                ->withName('Created'),
+
+            TimeFrame::make('users.email_verified_at')
+                ->withName('Verified'),
+        ];
     }
 
     public function lenses(NovaRequest $request): array
