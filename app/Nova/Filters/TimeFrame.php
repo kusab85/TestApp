@@ -76,6 +76,6 @@ class TimeFrame extends Filter
 
     public function key(): string
     {
-        return Str::snake($this->column).'_not_older_than';
+        return Str::snake(Str::replace('.', '_', $this->column)).'_not_older_than';
     }
 }
