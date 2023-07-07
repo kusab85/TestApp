@@ -4,11 +4,14 @@ namespace App\Nova\Actions;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Nova\Actions\ExportAsCsv;
 use Laravel\Nova\Actions\Response;
 use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\FilterDecoder;
 use Laravel\Nova\Http\Requests\ActionRequest;
+use Laravel\Nova\Http\Requests\LensActionRequest;
 use Laravel\Nova\Query\ApplyFilter;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -38,11 +41,26 @@ class ExportToCsv extends ExportAsCsv
     }
 
     /**
+     * I can not use $request->filters() directly because
+     * LensActionRequest->availableFilters() returns filters of its assigned resource
+     * not of the lens itself, so I need decode filters manually.
+     */
+    protected function requestFilters(ActionRequest $request): Collection
+    {
+        return ($request instanceof LensActionRequest)
+            ? (new FilterDecoder($request->filters, $request->lens()->availableFilters($request)))->filters()
+            : $request->filters();
+    }
+
+    /**
      * Make a filename using fileBasename and filters applied to query resources.
      */
     protected function resolveFileName(ActionRequest $request): string
     {
-        $filtersInfo = $request->filters()
+        // I should be able to use $request->filters() directly, but I can't because
+        // LensActionRequest->availableFilters() returns filters of its assigned resource
+        // not of the lens itself, so I need decode filters manually
+        $filtersInfo = $this->requestFilters($request)
             ->mapWithKeys(function (ApplyFilter $filter) use ($request) {
                 return [
                     $filter->filter->key() => [
