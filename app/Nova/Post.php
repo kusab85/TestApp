@@ -7,6 +7,7 @@ use App\Nova\Metrics\PostsPerStatus;
 use Laravel\Nova\Exceptions\HelperNotSupported;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
@@ -26,7 +27,16 @@ class Post extends Resource
             ID::make()->sortable(),
             Text::make('Title')->rules('required'),
             Trix::make('Body')->rules('required')->alwaysShow(),
-            BelongsTo::make('User'),
+            BelongsTo::make('User')
+                ->dependsOn(
+                    ['created_at'],
+                    function (BelongsTo $field, NovaRequest $request, FormData $formData) {
+                        $field->help(
+                            '$formData = '.var_export($formData->getAttributes(), true)."</br>\n".
+                            '$field->value = '.var_export($field->value, true)
+                        );
+                    }
+                ),
             Date::make('Created At')->filterable(),
             Select::make('Status')
                 ->options(PostModel::availableStatuses(true))
