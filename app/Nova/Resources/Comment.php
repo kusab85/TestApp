@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace App\Nova\Resources;
 
 use App\Models\Comment as CommentModel;
 use Illuminate\Support\Str;
@@ -26,16 +26,16 @@ class Comment extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make('Post')
+            BelongsTo::make('Post', 'post', Post::class)
                 ->hideFromIndex()
                 ->rules('required'),
 
             Line::make('Comment')
                 ->onlyOnIndex()
-                ->displayUsing(fn($comment) => Str::limit($comment, 120))
+                ->displayUsing(fn ($comment) => Str::limit($comment, 120))
                 ->asSmall(),
 
-            BelongsTo::make('User')
+            BelongsTo::make('User', 'user', User::class)
                 ->rules('required')
                 ->filterable(),
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace App\Nova\Resources;
 
 use App\Models\User as UserModel;
 use App\Nova\Actions\ExportToCsv;

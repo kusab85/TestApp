@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace App\Nova\Resources;
 
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -13,7 +13,6 @@ abstract class Resource extends NovaResource
      *
      * @param  NovaRequest  $request
      * @param  Builder  $query
-     *
      * @return Builder
      */
     public static function indexQuery(NovaRequest $request, $query): Builder
@@ -26,7 +25,6 @@ abstract class Resource extends NovaResource
      *
      * @param  NovaRequest  $request
      * @param  Builder  $query
-     *
      * @return Builder
      */
     public static function detailQuery(NovaRequest $request, $query): Builder
@@ -41,7 +39,6 @@ abstract class Resource extends NovaResource
      *
      * @param  NovaRequest  $request
      * @param  Builder  $query
-     *
      * @return Builder
      */
     public static function relatableQuery(NovaRequest $request, $query): Builder

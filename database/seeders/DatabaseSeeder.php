@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Product;
+use App\Models\ProductOption;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
@@ -17,7 +18,7 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         // create users
         User::factory()
@@ -43,24 +44,30 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         // create comments for random posts
-        Comment::factory()
-            ->count(1000)
-            ->sequence(function (Sequence $sequence) {
-                $post = Cache::get('posts', fn () => Post::all(['id', 'created_at']))->random();
-                $user = Cache::get('users', fn () => User::all(['id', 'created_at']))->random();
-                /*
-                                dump([
-                                    $post->created_at->format('Y.m.d H.i.s'),
-                                    $user->created_at->format('Y.m.d H.i.s'),
-                                    max($post->created_at, $user->created_at)->format('Y.m.d H.i.s'),
-                                ]);
-                */
-                return [
-                    'user_id' => $user->id,
-                    'post_id' => $post->id,
-                    'created_at' => fake()->dateTimeBetween(max($post->created_at, $user->created_at)),
-                ];
-            })
+//        Comment::factory()
+//            ->count(1000)
+//            ->sequence(function (Sequence $sequence) {
+//                $post = Cache::get('posts', fn () => Post::all(['id', 'created_at']))->random();
+//                $user = Cache::get('users', fn () => User::all(['id', 'created_at']))->random();
+//                /*
+//                                dump([
+//                                    $post->created_at->format('Y.m.d H.i.s'),
+//                                    $user->created_at->format('Y.m.d H.i.s'),
+//                                    max($post->created_at, $user->created_at)->format('Y.m.d H.i.s'),
+//                                ]);
+//                */
+//                return [
+//                    'user_id' => $user->id,
+//                    'post_id' => $post->id,
+//                    'created_at' => fake()->dateTimeBetween(max($post->created_at, $user->created_at)),
+//                ];
+//            })
+//            ->create();
+
+        // create products
+        Product::factory()
+            ->has(ProductOption::factory()->count(rand(3, 5)), 'options')
+            ->count(10)
             ->create();
     }
 }

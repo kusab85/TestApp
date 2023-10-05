@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace App\Nova\Resources;
 
 use App\Models\Post as PostModel;
 use App\Nova\Metrics\PostsPerStatus;
@@ -26,7 +26,7 @@ class Post extends Resource
             ID::make()->sortable(),
             Text::make('Title')->rules('required'),
             Trix::make('Body')->rules('required')->alwaysShow(),
-            BelongsTo::make('User'),
+            BelongsTo::make('User', 'user', User::class),
             Date::make('Created At')->filterable(),
             Select::make('Status')
                 ->options(PostModel::availableStatuses(true))
